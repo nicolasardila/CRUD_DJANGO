@@ -1,0 +1,19 @@
+<!-- filepath: c:\Users\Nicolas Ardila\Documents\evidencias ADSO\Django\mi_proyecto\myapp\templates\eliminar_producto.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Eliminar Producto</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Eliminar Producto</h1>
+        <p>¿Estás seguro de que deseas eliminar el producto "{{ producto.nombre }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a href="{% url 'lista_productos' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>

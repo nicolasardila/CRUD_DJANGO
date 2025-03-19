@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #e9ecef;
+        }
+        .btn {
+            transition: all 0.3s ease-in-out;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Lista de Productos</h1>
+        <div class="d-flex justify-content-between mb-3">
+            <a href="{% url 'agregar_producto' %}" class="btn btn-success">➕ Agregar Producto</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Fecha de Vencimiento</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto.nombre }}</td>
+                        <td>${{ producto.precio }}</td>
+                        <td>{{ producto.cantidad }}</td>
+                        <td>{{ producto.fecha_vencimiento }}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarModal{{ producto.id }}">✏️ Editar</button>
+                            <a href="{% url 'eliminar_producto' producto.id %}" class="btn btn-danger btn-sm">🗑️ Eliminar</a>
+                        </td>
+                    </tr>
+
+                    <!-- Modal para editar producto -->
+                    <div class="modal fade" id="editarModal{{ producto.id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ producto.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header bg-warning text-white">
+                                    <h5 class="modal-title" id="editarModalLabel{{ producto.id }}">Editar Producto</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" action="{% url 'editar_producto' producto.id %}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="nombre{{ producto.id }}">Nombre del Producto</label>
+                                            <input type="text" class="form-control" id="nombre{{ producto.id }}" name="nombre" value="{{ producto.nombre }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="precio{{ producto.id }}">Precio</label>
+                                            <input type="number" class="form-control" id="precio{{ producto.id }}" name="precio" value="{{ producto.precio }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cantidad{{ producto.id }}">Cantidad</label>
+                                            <input type="number" class="form-control" id="cantidad{{ producto.id }}" name="cantidad" value="{{ producto.cantidad }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="fecha_vencimiento{{ producto.id }}">Fecha de Vencimiento</label>
+                                            <input type="date" class="form-control" id="fecha_vencimiento{{ producto.id }}" name="fecha_vencimiento" value="{{ producto.fecha_vencimiento|date:'Y-m-d' }}" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
